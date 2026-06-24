@@ -129,3 +129,104 @@ impl FlyCamera {
         camera.pitch = camera.pitch.clamp(-89.0, 89.0);
     }
 }
+
+pub struct PlayerCamera {
+    pub move_speed: f32,
+    pub jump_velocity: f32,
+    pub gravity: f32,
+    velocity: Vec3,
+    sensitivity: f32,
+    first_mouse: bool,
+    last_x: f64,
+    last_y: f64,
+    enabled: bool,
+}
+
+impl Default for PlayerCamera {
+    fn default() -> Self {
+        Self {
+            move_speed: 8.0,
+            jump_velocity: 8.0,
+            gravity: 30.0,
+            velocity: Vec3::ZERO,
+            sensitivity: 0.1,
+            first_mouse: true,
+            last_x: 0.0,
+            last_y: 0.0,
+            enabled: false,
+        }
+    }
+}
+
+impl PlayerCamera {
+    pub fn set_enabled(&mut self, enabled: bool) {
+        self.enabled = enabled;
+    }
+
+    pub fn reset_mouse(&mut self) {
+        self.first_mouse = true;
+    }
+
+    pub fn update(&mut self, camera: &mut Camera, window: &Window, dt: f32) {
+        const GROUND_Y: f32 = -7.0;
+
+        let front = camera.front();
+        let forward = Vec3::new(front.x, 0.0, front.z).normalize();
+        let right = forward.cross(Vec3::Y).normalize();
+        let mut movement = Vec3::ZERO;
+
+        if window.get_key(Key::W) == Action::Press {
+            movement += forward;
+        }
+
+        if window.get_key(Key::S) == Action::Press {
+            movement -= forward;
+        }
+
+        if window.get_key(Key::A) == Action::Press {
+            movement -= right;
+        }
+
+        if window.get_key(Key::D) == Action::Press {
+            movement += right;
+        }
+
+        if movement.length_squared() > 0.0 {
+            movement = movement.normalize();
+        }
+
+        camera.position += movement * self.move_speed * dt;
+
+        let grounded = camera.position.y <= GROUND_Y;
+
+        if grounded {
+            camera.position.y = GROUND_Y;
+
+            self.velocity.y = 0.0;
+
+            if window.get_key(Key::Space) == Action::Press {
+                self.velocity.y = self.jump_velocity;
+            }
+        }
+        self.velocity.y -= self.gravity * dt;
+        camera.position.y += self.velocity.y * dt;
+
+        let (x, y) = window.get_cursor_pos();
+
+        if self.first_mouse {
+            self.last_x = x;
+            self.last_y = y;
+            self.first_mouse = false;
+        }
+
+        let dx = x - self.last_x;
+        let dy = self.last_y - y;
+
+        self.last_x = x;
+        self.last_y = y;
+
+        camera.yaw += dx as f32 * self.sensitivity;
+        camera.pitch += dy as f32 * self.sensitivity;
+        camera.pitch = camera.pitch.clamp(-89.0, 89.0);
+    }
+}

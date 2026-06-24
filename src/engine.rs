@@ -4,7 +4,7 @@ use glam::Vec3;
 use glfw::{Action, Context, GlfwReceiver, Key, MouseButton, PWindow, WindowEvent};
 
 use crate::assets::Assets;
-use crate::camera::{Camera, FlyCamera};
+use crate::camera::{Camera, FlyCamera, PlayerCamera};
 use crate::material::Material;
 use crate::mesh::Mesh;
 use crate::renderer::{Lighting, Renderer};
@@ -26,8 +26,11 @@ pub struct Engine {
     assets: Assets,
     camera: Camera,
     fly_camera: FlyCamera,
+    player_camera: PlayerCamera,
     lighting: Lighting,
     mouse_locked: bool,
+    use_player_camera: bool,
+    toggle: bool,
 }
 
 impl Engine {
@@ -69,8 +72,11 @@ impl Engine {
             assets,
             camera,
             fly_camera: FlyCamera::default(),
+            player_camera: PlayerCamera::default(),
             lighting: Lighting::default(),
             mouse_locked: false,
+            use_player_camera: true,
+            toggle: false,
         };
 
         engine.window.set_cursor_mode(glfw::CursorMode::Normal);
@@ -128,18 +134,44 @@ impl Engine {
     }
 
     fn update_camera_controls(&mut self, dt: f32) {
+        let toggle_pressed = self.window.get_key(Key::C) == Action::Press;
+
+        if toggle_pressed && !self.toggle {
+            self.use_player_camera = !self.use_player_camera;
+
+            self.fly_camera.reset_mouse();
+            self.player_camera.reset_mouse();
+        }
+
+        self.toggle = toggle_pressed;
         if self.window.get_key(Key::Escape) == Action::Press {
             self.window.set_cursor_mode(glfw::CursorMode::Normal);
             self.mouse_locked = false;
+
             self.fly_camera.set_enabled(false);
-        } else if !self.mouse_locked && self.window.get_mouse_button(MouseButton::Button1) == Action::Press
+            self.player_camera.set_enabled(false);
+        } else if !self.mouse_locked
+        && self.window.get_mouse_button(MouseButton::Button1) == Action::Press
         {
             self.window.set_cursor_mode(glfw::CursorMode::Disabled);
+
             self.fly_camera.reset_mouse();
+            self.player_camera.reset_mouse();
+
             self.mouse_locked = true;
-            self.fly_camera.set_enabled(true);
+
         }
 
-        self.fly_camera.update(&mut self.camera, &self.window, dt);
+        if self.mouse_locked {
+            self.fly_camera.set_enabled(!self.use_player_camera);
+            self.player_camera.set_enabled(self.use_player_camera);
+            if self.use_player_camera {
+                self.player_camera
+                    .update(&mut self.camera, &self.window, dt);
+            } else {
+                self.fly_camera
+                    .update(&mut self.camera, &self.window, dt);
+            }
+        }
     }
 }

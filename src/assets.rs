@@ -65,10 +65,15 @@ impl Assets {
         self.meshes.insert(key.to_string(), m.clone());
         m
     }
-    
+
     /// Compile shader from source strings with caching
     #[allow(unused)]
-    pub fn shader_from_sources(&mut self, key: &str, vertex_src: &str, fragment_src: &str) -> Rc<Shader> {
+    pub fn shader_from_sources(
+        &mut self,
+        key: &str,
+        vertex_src: &str,
+        fragment_src: &str,
+    ) -> Rc<Shader> {
         if let Some(s) = self.shaders.get(key) {
             return s.clone();
         }

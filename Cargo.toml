@@ -1,13 +1,7 @@
-[package]
-name = "engine"
-version = "0.1.0"
-edition = "2021"
-description = "Small OpenGL demo engine (Rust port)"
+[workspace]
+members = [
+    "core",
+    "game"
+]
 
-[dependencies]
-bytemuck = "1.14"
-glam = { version = "0.29", features = ["std"] }
-glfw = "0.59"
-glow = "0.16"
-image = "0.25"
-rand = "0.8"
+resolver = "2"

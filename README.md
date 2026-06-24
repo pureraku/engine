@@ -25,3 +25,14 @@ cargo run
 ```
 
 ---
+## Todo
+
+- [ ] ECS
+- [ ] Hierarchical scene graph
+- [ ] PBR materials
+- [ ] Shadow mapping
+- [ ] Instanced rendering
+- [ ] Model loading (GLTF/OBJ)
+- [ ] Physics integration
+- [x] Seperate engine core from game code
+---

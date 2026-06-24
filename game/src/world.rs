@@ -1,12 +1,10 @@
-use glam::Vec3;
 use rand::Rng;
 use std::rc::Rc;
 
-use crate::engine::{Engine, Game};
-use crate::geometry;
-use crate::material::Material;
-
-pub struct DemoGame;
+use engine::{Engine, Game, Vec3};
+use engine::geometry;
+use engine::material::Material;
+pub struct World;
 
 fn random_position(rng: &mut impl Rng) -> Vec3 {
     Vec3::new(
@@ -16,7 +14,7 @@ fn random_position(rng: &mut impl Rng) -> Vec3 {
     )
 }
 
-impl Game for DemoGame {
+impl Game for World {
     fn init(&mut self, engine: &mut Engine) {
         let assets = engine.assets();
         let (cube_mesh, sphere_mesh, cube_mat, sphere_mat) = {
@@ -39,18 +37,23 @@ impl Game for DemoGame {
 
         // Creating a new cube at the origin ... 
         let vertex_shader = std::fs::read_to_string(
-            concat!(env!("CARGO_MANIFEST_DIR"), "/src/game/shaders/ground/ground.vert"),
+            concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/shaders/ground/ground.vert"
+            ),
         ).expect("failed to load vertex shader");
 
         let fragment_shader = std::fs::read_to_string(
-            concat!(env!("CARGO_MANIFEST_DIR"), "/src/game/shaders/ground/ground.frag"),
+            concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/shaders/ground/ground.frag"
+            ),
         ).expect("failed to load fragment shader");
         let custom_shader = assets.shader_from_sources(
             "test",
             &vertex_shader,
             &fragment_shader,
         );
-
         let cool_mat = Rc::new(Material::new(custom_shader));
 
         // Spawn items in world

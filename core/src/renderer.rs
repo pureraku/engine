@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
-use glow::HasContext;
 use glam::{Mat4, Vec3};
+use glow::HasContext;
 
 use crate::camera::Camera;
 use crate::material::Material;
@@ -9,6 +9,7 @@ use crate::scene::Scene;
 pub struct Lighting {
     pub light_pos: Vec3,
     pub light_color: Vec3,
+    pub light_intensity: f32,
 }
 
 impl Default for Lighting {
@@ -16,6 +17,7 @@ impl Default for Lighting {
         Self {
             light_pos: Vec3::new(2.0, 2.0, 2.0),
             light_color: Vec3::ONE,
+            light_intensity: 1.0,
         }
     }
 }
@@ -41,7 +43,8 @@ impl Renderer {
     pub fn begin_frame(&self) {
         unsafe {
             self.gl.clear_color(0.1, 0.1, 0.15, 1.0);
-            self.gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
+            self.gl
+                .clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
         }
     }
 
@@ -74,6 +77,7 @@ impl Renderer {
             set_mat4(gl, program, "projection", &proj);
             set_vec3(gl, program, "lightPos", lighting.light_pos);
             set_vec3(gl, program, "lightColor", lighting.light_color);
+            set_f32(gl, program, "lightIntensity", lighting.light_intensity);
             set_vec3(gl, program, "baseColor", mat.base_color);
             set_i32(gl, program, "useTexture", mat.albedo.is_some() as i32);
             set_f32(gl, program, "toonSteps", mat.toon_steps);

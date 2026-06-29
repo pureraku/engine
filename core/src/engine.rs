@@ -37,7 +37,9 @@ impl Engine {
     pub fn new(width: u32, height: u32, title: &str) -> Self {
         let mut glfw = glfw::init(glfw::fail_on_errors).expect("glfw init");
         glfw.window_hint(glfw::WindowHint::ContextVersion(4, 1));
-        glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
+        glfw.window_hint(glfw::WindowHint::OpenGlProfile(
+            glfw::OpenGlProfileHint::Core,
+        ));
         glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
         let (mut window, events) = glfw
@@ -85,6 +87,10 @@ impl Engine {
 
     pub fn assets(&mut self) -> &mut Assets {
         &mut self.assets
+    }
+
+    pub fn lighting(&mut self) -> &mut Lighting {
+        &mut self.lighting
     }
 
     /// Spawn a drawable with position and per-frame transform logic.
@@ -151,7 +157,7 @@ impl Engine {
             self.fly_camera.set_enabled(false);
             self.player_camera.set_enabled(false);
         } else if !self.mouse_locked
-        && self.window.get_mouse_button(MouseButton::Button1) == Action::Press
+            && self.window.get_mouse_button(MouseButton::Button1) == Action::Press
         {
             self.window.set_cursor_mode(glfw::CursorMode::Disabled);
 
@@ -159,7 +165,6 @@ impl Engine {
             self.player_camera.reset_mouse();
 
             self.mouse_locked = true;
-
         }
 
         if self.mouse_locked {
@@ -169,8 +174,7 @@ impl Engine {
                 self.player_camera
                     .update(&mut self.camera, &self.window, dt);
             } else {
-                self.fly_camera
-                    .update(&mut self.camera, &self.window, dt);
+                self.fly_camera.update(&mut self.camera, &self.window, dt);
             }
         }
     }

@@ -2,7 +2,7 @@
 
 A small graphics engine written in Rust using modern OpenGL.
 
-This project is organized as a Cargo workspace with a ``reusable engine crate`` and a separate game crate for demonstrating engine usage.
+This project is organized as a Cargo workspace with a `reusable engine crate` and a separate game crate for demonstrating engine usage.
 
 ## Features
 
@@ -71,6 +71,7 @@ cargo run -p game
 - [ ] Hierarchical scene graph
 - [ ] Asset hot reloading
 - [ ] Serialization
+- [ ] Load user shader files gracefully
 
 ### Gameplay
 

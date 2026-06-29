@@ -12,9 +12,12 @@ uniform bool useTexture;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform float lightIntensity;
 
 void main()
 {
+    float ambient = 0.2;
+
     vec3 norm = normalize(vNormal);
 
     vec3 lightDir =
@@ -30,7 +33,8 @@ void main()
     vec3 result =
         texColor *
         lightColor *
-        diff;
+        (ambient + diff) *
+        lightIntensity;
 
     FragColor = vec4(result, 1.0);
 }

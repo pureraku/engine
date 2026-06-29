@@ -2,7 +2,8 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
-use crate::geometry::GeometryData;
+use crate::geometry;
+use crate::material::Material;
 use crate::mesh::Mesh;
 use crate::shader::Shader;
 use crate::texture::Texture;
@@ -16,6 +17,10 @@ pub struct Assets {
     shaders: HashMap<String, Rc<Shader>>,
     textures: HashMap<String, Rc<Texture>>,
     meshes: HashMap<String, Rc<Mesh>>,
+}
+pub enum MeshType {
+    Cube,
+    UvSphere { stacks: i32, slices: i32 },
 }
 
 impl Assets {
@@ -55,25 +60,37 @@ impl Assets {
         self.textures.insert(key.to_string(), t.clone());
         t
     }
-
-    /// Upload procedural geometry (cached).
-    pub fn mesh(&mut self, key: &str, geometry: &GeometryData) -> Rc<Mesh> {
-        if let Some(m) = self.meshes.get(key) {
-            return m.clone();
-        }
-        let m = Rc::new(Mesh::new(&self.gl, &geometry.vertices, geometry.stride));
-        self.meshes.insert(key.to_string(), m.clone());
-        m
+    // Create new shader material
+    pub fn new_material(&mut self, shader: &str) -> Material {
+        Material::new(self.shader(shader))
     }
 
+    /// Choose procedural geometry (cached).
+    pub fn mesh(&mut self, kind: MeshType) -> Rc<Mesh> {
+        let key = match &kind {
+            MeshType::Cube => "cube".to_string(),
+            MeshType::UvSphere { stacks, slices } => {
+                format!("uv_sphere:{stacks}:{slices}")
+            }
+        };
+
+        if let Some(mesh) = self.meshes.get(&key) {
+            return mesh.clone();
+        }
+
+        let geometry = match kind {
+            MeshType::Cube => geometry::cube(),
+            MeshType::UvSphere { stacks, slices } => geometry::uv_sphere(stacks, slices),
+        };
+
+        let mesh = Rc::new(Mesh::new(&self.gl, &geometry.vertices, geometry.stride));
+
+        self.meshes.insert(key, mesh.clone());
+        mesh
+    }
     /// Compile shader from source strings with caching
     #[allow(unused)]
-    pub fn shader_from_sources(
-        &mut self,
-        key: &str,
-        vertex_src: &str,
-        fragment_src: &str,
-    ) -> Rc<Shader> {
+    pub fn create_shader(&mut self, key: &str, vertex_src: &str, fragment_src: &str) -> Rc<Shader> {
         if let Some(s) = self.shaders.get(key) {
             return s.clone();
         }

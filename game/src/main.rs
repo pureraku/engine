@@ -1,7 +1,4 @@
-mod cube;
-mod ground;
-mod sphere;
-mod sun;
+mod objects;
 mod world;
 
 use engine::Engine;

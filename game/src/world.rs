@@ -1,9 +1,9 @@
 use rand::Rng;
 
-use crate::cube::Cube;
-use crate::ground::Ground;
-use crate::sphere::Sphere;
-use crate::sun::Sun;
+use crate::objects::cube::Cube;
+use crate::objects::ground::Ground;
+use crate::objects::sphere::Sphere;
+use crate::objects::sun::Sun;
 use engine::{Engine, Game};
 
 pub struct World {

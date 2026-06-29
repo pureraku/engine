@@ -2,10 +2,10 @@ use std::rc::Rc;
 
 use glfw::{Action, Context, GlfwReceiver, Key, MouseButton, PWindow, WindowEvent};
 
-use crate::assets::Assets;
+use crate::assets::assets_manager::AssetsManager;
+use crate::assets::material::Material;
+use crate::assets::mesh::Mesh;
 use crate::camera::{Camera, FlyCamera, PlayerCamera};
-use crate::material::Material;
-use crate::mesh::Mesh;
 use crate::renderer::{Lighting, Renderer};
 use crate::scene::{EntityId, Scene};
 use crate::transform::Transform;
@@ -22,7 +22,7 @@ pub struct Engine {
     _gl: Rc<glow::Context>,
     renderer: Renderer,
     scene: Scene,
-    assets: Assets,
+    assets_manager: AssetsManager,
     camera: Camera,
     fly_camera: FlyCamera,
     player_camera: PlayerCamera,
@@ -61,7 +61,7 @@ impl Engine {
         let camera = Camera::new(aspect);
         let renderer = Renderer::new(&gl);
         renderer.resize(fb_w as u32, fb_h as u32);
-        let assets = Assets::new(&gl);
+        let assets_manager = AssetsManager::new(&gl);
 
         let mut engine = Self {
             glfw,
@@ -70,7 +70,7 @@ impl Engine {
             _gl: gl,
             renderer,
             scene: Scene::default(),
-            assets,
+            assets_manager,
             camera,
             fly_camera: FlyCamera::default(),
             player_camera: PlayerCamera::default(),
@@ -84,8 +84,8 @@ impl Engine {
         engine
     }
 
-    pub fn assets(&mut self) -> &mut Assets {
-        &mut self.assets
+    pub fn assets(&mut self) -> &mut AssetsManager {
+        &mut self.assets_manager
     }
 
     pub fn lighting(&mut self) -> &mut Lighting {

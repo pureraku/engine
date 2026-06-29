@@ -1,14 +1,12 @@
-pub mod assets;
 pub mod camera;
 pub mod engine;
-pub mod geometry;
-pub mod material;
-pub mod mesh;
 pub mod renderer;
 pub mod scene;
 pub mod shader;
 pub mod texture;
 pub mod transform;
+
+pub mod assets;
 
 pub use engine::Engine;
 pub use engine::Game;

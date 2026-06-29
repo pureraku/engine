@@ -1,4 +1,4 @@
-use engine::assets::MeshType;
+use engine::assets::assets_manager::MeshType;
 use engine::{Engine, EntityId, Vec3, transform::Transform};
 use std::rc::Rc;
 

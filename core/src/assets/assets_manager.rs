@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 
-use crate::geometry;
-use crate::material::Material;
-use crate::mesh::Mesh;
+use crate::assets::geometry;
+use crate::assets::material::Material;
+use crate::assets::mesh::Mesh;
 use crate::shader::Shader;
 use crate::texture::Texture;
 
@@ -12,7 +12,7 @@ fn project_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
 
-pub struct Assets {
+pub struct AssetsManager {
     gl: Rc<glow::Context>,
     shaders: HashMap<String, Rc<Shader>>,
     textures: HashMap<String, Rc<Texture>>,
@@ -23,7 +23,7 @@ pub enum MeshType {
     UvSphere { stacks: i32, slices: i32 },
 }
 
-impl Assets {
+impl AssetsManager {
     pub fn new(gl: &Rc<glow::Context>) -> Self {
         Self {
             gl: gl.clone(),

@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
-use crate::material::Material;
-use crate::mesh::Mesh;
+use crate::assets::material::Material;
+use crate::assets::mesh::Mesh;
 use crate::transform::Transform;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]

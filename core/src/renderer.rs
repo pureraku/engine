@@ -3,8 +3,8 @@ use std::rc::Rc;
 use glam::{Mat4, Vec3};
 use glow::HasContext;
 
+use crate::assets::material::Material;
 use crate::camera::Camera;
-use crate::material::Material;
 use crate::scene::Scene;
 pub struct Lighting {
     pub light_pos: Vec3,

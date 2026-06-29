@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use glfw::{Action, Context, GlfwReceiver, Key, MouseButton, PWindow, WindowEvent};
 
-use crate::assets::assets_manager::AssetsManager;
+use crate::assets::asset_manager::AssetManager;
 use crate::assets::material::Material;
 use crate::assets::mesh::Mesh;
 use crate::camera::{Camera, FlyCamera, PlayerCamera};
@@ -22,7 +22,7 @@ pub struct Engine {
     _gl: Rc<glow::Context>,
     renderer: Renderer,
     scene: Scene,
-    assets_manager: AssetsManager,
+    assets_manager: AssetManager,
     camera: Camera,
     fly_camera: FlyCamera,
     player_camera: PlayerCamera,
@@ -61,7 +61,7 @@ impl Engine {
         let camera = Camera::new(aspect);
         let renderer = Renderer::new(&gl);
         renderer.resize(fb_w as u32, fb_h as u32);
-        let assets_manager = AssetsManager::new(&gl);
+        let assets_manager = AssetManager::new(&gl);
 
         let mut engine = Self {
             glfw,
@@ -84,7 +84,7 @@ impl Engine {
         engine
     }
 
-    pub fn assets(&mut self) -> &mut AssetsManager {
+    pub fn assets(&mut self) -> &mut AssetManager {
         &mut self.assets_manager
     }
 

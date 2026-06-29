@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use glam::Vec3;
 
-use crate::shader::Shader;
-use crate::texture::Texture;
+use crate::assets::shader::Shader;
+use crate::assets::texture::Texture;
 
 #[derive(Clone)]
 pub struct Material {

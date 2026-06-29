@@ -1,6 +1,8 @@
 # Pwengine
 
-A small graphics engine written in Rust using modern OpenGL.
+A small game engine written in Rust using modern OpenGL.
+
+![image](/images/example.png)
 
 This project is organized as a Cargo workspace with a `reusable engine crate` and a separate game crate for demonstrating engine usage.
 
@@ -42,6 +44,10 @@ This project is organized as a Cargo workspace with a `reusable engine crate` an
 ├── core/      # Engine library
 └── game/      # Example game/application
 ```
+
+![image](/images/tree.png)
+
+> current structure may or may not be the same as above structure!
 
 ## Build
 

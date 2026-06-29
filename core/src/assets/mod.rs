@@ -1,5 +1,6 @@
-pub mod assets_manager;
+pub mod asset_manager;
 pub mod geometry;
-pub mod gltf_loader;
 pub mod material;
 pub mod mesh;
+pub mod shader;
+pub mod texture;

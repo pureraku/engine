@@ -5,14 +5,14 @@ use std::rc::Rc;
 use crate::assets::geometry;
 use crate::assets::material::Material;
 use crate::assets::mesh::Mesh;
-use crate::shader::Shader;
-use crate::texture::Texture;
+use crate::assets::shader::Shader;
+use crate::assets::texture::Texture;
 
 fn project_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
 
-pub struct AssetsManager {
+pub struct AssetManager {
     gl: Rc<glow::Context>,
     shaders: HashMap<String, Rc<Shader>>,
     textures: HashMap<String, Rc<Texture>>,
@@ -23,7 +23,7 @@ pub enum MeshType {
     UvSphere { stacks: i32, slices: i32 },
 }
 
-impl AssetsManager {
+impl AssetManager {
     pub fn new(gl: &Rc<glow::Context>) -> Self {
         Self {
             gl: gl.clone(),

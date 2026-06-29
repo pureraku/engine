@@ -1,4 +1,4 @@
-use engine::assets::assets_manager::MeshType;
+use engine::assets::asset_manager::MeshType;
 use engine::{Engine, EntityId, Vec3, transform::Transform};
 use rand::Rng;
 use std::rc::Rc;
@@ -15,7 +15,7 @@ impl Cube {
             engine
                 .assets()
                 .new_material("basic")
-                .with_texture(engine.assets().texture("cat", "assets/image.JPG")),
+                .with_texture(engine.assets().texture("cat", "assets/cat.jpg")),
         );
 
         let mut transform = Transform::default();

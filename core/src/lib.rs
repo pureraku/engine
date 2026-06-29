@@ -10,7 +10,7 @@ pub mod shader;
 pub mod texture;
 pub mod transform;
 
-
 pub use engine::Engine;
 pub use engine::Game;
-pub use glam::{Vec2, Vec3, Vec4, Mat4, Quat};
+pub use glam::{Mat4, Quat, Vec2, Vec3, Vec4};
+pub use scene::EntityId;

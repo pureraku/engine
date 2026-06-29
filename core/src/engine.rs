@@ -1,6 +1,5 @@
 use std::rc::Rc;
 
-use glam::Vec3;
 use glfw::{Action, Context, GlfwReceiver, Key, MouseButton, PWindow, WindowEvent};
 
 use crate::assets::Assets;
@@ -8,7 +7,7 @@ use crate::camera::{Camera, FlyCamera, PlayerCamera};
 use crate::material::Material;
 use crate::mesh::Mesh;
 use crate::renderer::{Lighting, Renderer};
-use crate::scene::Scene;
+use crate::scene::{EntityId, Scene};
 use crate::transform::Transform;
 
 pub trait Game {
@@ -93,15 +92,16 @@ impl Engine {
         &mut self.lighting
     }
 
-    /// Spawn a drawable with position and per-frame transform logic.
     pub fn spawn(
         &mut self,
         mesh: Rc<Mesh>,
         material: Rc<Material>,
-        position: Vec3,
-        on_update: impl FnMut(&mut Transform, f32, f32) + 'static,
-    ) {
-        self.scene.spawn(mesh, material, position, on_update);
+        transform: Transform,
+    ) -> EntityId {
+        self.scene.spawn(mesh, material, transform)
+    }
+    pub fn transform_mut(&mut self, id: EntityId) -> &mut crate::transform::Transform {
+        &mut self.scene.object_mut(id).transform
     }
 
     pub fn run<G: Game>(&mut self, mut game: G) {
@@ -117,7 +117,6 @@ impl Engine {
             last_time = time;
 
             self.poll_framebuffer_events();
-            self.scene.update(time, dt);
             self.update_camera_controls(dt);
             game.update(self, time, dt);
             self.renderer

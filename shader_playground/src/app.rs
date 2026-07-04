@@ -28,18 +28,37 @@ pub struct Plane {
 }
 
 impl Plane {
+    fn load_shaders() -> (String, String) {
+        let vertex =
+            std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/shader/plane.vert"))
+                .expect("failed to load vertex shader");
+
+        let fragment =
+            std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/shader/plane.frag"))
+                .expect("failed to load fragment shader");
+
+        (vertex, fragment)
+    }
+
     pub fn new(engine: &mut Engine) -> Self {
+        let (vertex_shader, fragment_shader) = Self::load_shaders();
+
+        engine
+            .assets()
+            .create_shader("test", &vertex_shader, &fragment_shader);
+
         let mesh = engine.assets().mesh(MeshType::Plane);
+
         let material = Rc::new(
             engine
                 .assets()
-                .new_material("basic")
+                .new_material("test")
                 .with_color(Vec3::new(1.0, 0.0, 0.0)),
         );
+
         let mut transform = Transform::default();
-        transform.position = Vec3::new(0.0, 0.0, 0.0);
+        transform.scale = Vec3::splat(3.0);
         transform.rotation.x = FRAC_PI_2;
-        transform.scale = Vec3::new(1.0, 1.0, 1.0);
 
         Self {
             _id: engine.spawn(mesh, material, transform),

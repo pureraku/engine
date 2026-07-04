@@ -76,7 +76,7 @@ impl Engine {
             player_camera: PlayerCamera::default(),
             lighting: Lighting::default(),
             mouse_locked: false,
-            use_player_camera: true,
+            use_player_camera: false,
             toggle: false,
         };
 

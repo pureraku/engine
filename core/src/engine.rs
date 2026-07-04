@@ -120,7 +120,7 @@ impl Engine {
             self.update_camera_controls(dt);
             game.update(self, time, dt);
             self.renderer
-                .draw_scene(&self.scene, &self.camera, &self.lighting);
+                .draw_scene(&self.scene, &self.camera, &self.lighting, time);
 
             self.window.swap_buffers();
             self.glfw.poll_events();

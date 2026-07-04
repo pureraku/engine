@@ -48,13 +48,13 @@ impl Renderer {
         }
     }
 
-    pub fn draw_scene(&self, scene: &Scene, camera: &Camera, lighting: &Lighting) {
+    pub fn draw_scene(&self, scene: &Scene, camera: &Camera, lighting: &Lighting, time: f32) {
         let view = camera.view_matrix();
         let proj = camera.projection_matrix();
 
         for obj in scene.objects() {
             let mat = obj.material();
-            self.draw_object(obj.model_matrix(), mat, view, proj, lighting);
+            self.draw_object(obj.model_matrix(), mat, view, proj, lighting, time);
             obj.mesh().draw();
         }
     }
@@ -66,6 +66,7 @@ impl Renderer {
         view: Mat4,
         proj: Mat4,
         lighting: &Lighting,
+        time: f32,
     ) {
         mat.shader.use_program();
         let gl = &self.gl;
@@ -78,6 +79,7 @@ impl Renderer {
             set_vec3(gl, program, "lightPos", lighting.light_pos);
             set_vec3(gl, program, "lightColor", lighting.light_color);
             set_f32(gl, program, "lightIntensity", lighting.light_intensity);
+            set_f32(gl, program, "time", time);
             set_vec3(gl, program, "baseColor", mat.base_color);
             set_i32(gl, program, "useTexture", mat.albedo.is_some() as i32);
             set_f32(gl, program, "toonSteps", mat.toon_steps);

@@ -2,8 +2,10 @@ use rand::Rng;
 
 use crate::objects::cube::Cube;
 use crate::objects::ground::Ground;
+use crate::objects::plane::Plane;
 use crate::objects::sphere::Sphere;
 use crate::objects::sun::Sun;
+use crate::objects::triangle::Triangle;
 use engine::{Engine, Game};
 
 pub struct World {
@@ -11,6 +13,8 @@ pub struct World {
     spheres: Vec<Sphere>,
     ground: Option<Ground>,
     sun: Option<Sun>,
+    plane: Option<Plane>,
+    triangle: Option<Triangle>,
 }
 
 impl Default for World {
@@ -20,6 +24,8 @@ impl Default for World {
             spheres: Vec::new(),
             ground: None,
             sun: None,
+            plane: None,
+            triangle: None,
         }
     }
 }
@@ -34,6 +40,8 @@ impl Game for World {
         self.create_spheres(engine, &mut rng);
         self.ground = Some(Ground::new(engine));
         self.sun = Some(Sun::new(engine));
+        self.plane = Some(Plane::new(engine));
+        self.triangle = Some(Triangle::new(engine));
     }
 
     fn update(&mut self, engine: &mut Engine, time: f32, _dt: f32) {

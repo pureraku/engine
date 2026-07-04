@@ -21,6 +21,8 @@ pub struct AssetManager {
 pub enum MeshType {
     Cube,
     UvSphere { stacks: i32, slices: i32 },
+    Plane,
+    Triangle,
 }
 
 impl AssetManager {
@@ -69,6 +71,8 @@ impl AssetManager {
     pub fn mesh(&mut self, kind: MeshType) -> Rc<Mesh> {
         let key = match &kind {
             MeshType::Cube => "cube".to_string(),
+            MeshType::Plane => "plane".to_string(),
+            MeshType::Triangle => "triangle".to_string(),
             MeshType::UvSphere { stacks, slices } => {
                 format!("uv_sphere:{stacks}:{slices}")
             }
@@ -80,6 +84,8 @@ impl AssetManager {
 
         let geometry = match kind {
             MeshType::Cube => geometry::cube(),
+            MeshType::Plane => geometry::plane(),
+            MeshType::Triangle => geometry::triangle(),
             MeshType::UvSphere { stacks, slices } => geometry::uv_sphere(stacks, slices),
         };
 

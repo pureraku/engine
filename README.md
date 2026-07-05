@@ -78,6 +78,7 @@ cargo run -p game
 - [ ] Asset hot reloading
 - [ ] Serialization
 - [ ] Load user shader files gracefully
+- [ ] Add Web Platform
 
 ### Gameplay
 

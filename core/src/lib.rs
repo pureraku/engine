@@ -5,6 +5,7 @@ pub mod scene;
 pub mod transform;
 
 pub mod assets;
+pub mod platform;
 
 pub use engine::Engine;
 pub use engine::Game;

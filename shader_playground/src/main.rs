@@ -2,7 +2,12 @@ mod app;
 
 use app::App;
 use engine::Engine;
+use engine::platform::desktop::DesktopPlatform;
 
 fn main() {
-    Engine::new(800, 600, "Press 'C' to toggle FlyCamera").run(App::default());
+    let mut platform = DesktopPlatform::new(1280, 720, "Game");
+
+    let mut engine = Engine::new(&mut platform);
+
+    platform.run(&mut engine, App::default());
 }

@@ -79,6 +79,7 @@ cargo run -p game
 - [ ] Serialization
 - [ ] Load user shader files gracefully
 - [ ] Add Web Platform
+- [ ] Completely isolate engine and GLFW
 
 ### Gameplay
 

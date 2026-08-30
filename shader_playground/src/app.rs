@@ -18,13 +18,24 @@ impl Game for App {
         engine.lighting().light_intensity = 4.0;
 
         self.plane = Some(Plane::new(engine));
+        if let Some(plane) = &self.plane {
+            let transform = engine.transform_mut(plane.id);
+            transform.scale = Vec3::splat(3.0);
+            transform.rotation.x = FRAC_PI_2;
+        }
     }
 
-    fn update(&mut self, _engine: &mut Engine, _time: f32, _dt: f32) {}
+    fn update(&mut self, engine: &mut Engine, _time: f32, _dt: f32) {
+
+        if let Some(plane) = &self.plane {
+            let transform = engine.transform_mut(plane.id);
+            transform.rotation.y += 0.01;
+        }
+    }
 }
 
 pub struct Plane {
-    pub _id: EntityId,
+    pub id: EntityId,
 }
 
 impl Plane {
@@ -53,15 +64,12 @@ impl Plane {
             engine
                 .assets()
                 .new_material("test")
-                .with_color(Vec3::new(1.0, 0.0, 0.0)),
         );
 
-        let mut transform = Transform::default();
-        transform.scale = Vec3::splat(3.0);
-        transform.rotation.x = FRAC_PI_2;
+        let transform = Transform::default();
 
         Self {
-            _id: engine.spawn(mesh, material, transform),
+            id: engine.spawn(mesh, material, transform),
         }
     }
 }

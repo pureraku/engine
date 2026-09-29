@@ -30,7 +30,14 @@ impl Renderer {
     pub fn new(gl: &Rc<glow::Context>) -> Self {
         unsafe {
             gl.enable(glow::DEPTH_TEST);
+
+            gl.enable(glow::BLEND);
+            gl.blend_func(
+                glow::SRC_ALPHA,
+                glow::ONE_MINUS_SRC_ALPHA,
+            );
         }
+
         Self { gl: gl.clone() }
     }
 
@@ -54,7 +61,7 @@ impl Renderer {
 
         for obj in scene.objects() {
             let mat = obj.material();
-            self.draw_object(obj.model_matrix(), mat, view, proj, lighting, time);
+            self.draw_object(obj.model_matrix(), mat, view, proj, camera, lighting, time);
             obj.mesh().draw();
         }
     }
@@ -65,6 +72,7 @@ impl Renderer {
         mat: &Material,
         view: Mat4,
         proj: Mat4,
+        camera: &Camera,
         lighting: &Lighting,
         time: f32,
     ) {
@@ -78,6 +86,7 @@ impl Renderer {
             set_mat4(gl, program, "projection", &proj);
             set_vec3(gl, program, "lightPos", lighting.light_pos);
             set_vec3(gl, program, "lightColor", lighting.light_color);
+            set_vec3(gl, program, "cameraPos", camera.position);
             set_f32(gl, program, "lightIntensity", lighting.light_intensity);
             set_f32(gl, program, "time", time);
             set_vec3(gl, program, "baseColor", mat.base_color);

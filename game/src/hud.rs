@@ -165,19 +165,75 @@ impl Hud {
             ui.draw_text(ars_x + 12.0, ars_y + 42.0, &ammo_text, 3.0, ammo_col);
         }
 
-        // Weapon Selector Pips (1 2 3)
-        for i in 0..3 {
-            let pip_x = ars_x + ars_w - 60.0 + (i as f32) * 16.0;
-            let pip_y = ars_y + 46.0;
-            let is_sel = i == weapons.active_index;
-            let col = if is_sel {
-                Vec4::new(0.2, 0.9, 1.0, 1.0)
-            } else {
-                Vec4::new(0.3, 0.35, 0.4, 0.6)
-            };
-            ui.draw_rect(pip_x, pip_y, 10.0, 10.0, col);
-        }
+        // Weapon Selector — displayed above the current weapon box.
+        let selector_h = 32.0;
+        let selector_y = ars_y - selector_h - 6.0;
+        let selector_x = ars_x;
+        let selector_w = ars_w;
 
+        ui.draw_rect(
+            selector_x,
+            selector_y,
+            selector_w,
+            selector_h,
+            Vec4::new(0.05, 0.07, 0.12, 0.8),
+        );
+
+        ui.draw_rect_outline(
+            selector_x,
+            selector_y,
+            selector_w,
+            selector_h,
+            1.5,
+            Vec4::new(0.1, 0.7, 0.9, 0.7),
+        );
+
+        // 1 / 2 / 3 weapon slots
+        let slot_w = selector_w / 3.0;
+
+        for i in 0..3 {
+            let slot_x = selector_x + i as f32 * slot_w;
+            let is_selected = i == weapons.active_index;
+
+            // Highlight active weapon
+            if is_selected {
+                ui.draw_rect(
+                    slot_x + 2.0,
+                    selector_y + 2.0,
+                    slot_w - 4.0,
+                    selector_h - 4.0,
+                    Vec4::new(0.0, 0.65, 0.9, 0.25),
+                );
+            }
+
+            // Slot number
+            let key = format!("{}", i + 1);
+
+            let text_col = if is_selected {
+                Vec4::new(0.2, 0.95, 1.0, 1.0)
+            } else {
+                Vec4::new(0.5, 0.55, 0.6, 0.9)
+            };
+
+            ui.draw_text(
+                slot_x + slot_w * 0.5 - 3.0,
+                selector_y + 8.0,
+                &key,
+                2.0,
+                text_col,
+            );
+
+            // Divider between slots
+            if i < 2 {
+                ui.draw_rect(
+                    slot_x + slot_w - 0.5,
+                    selector_y + 5.0,
+                    1.0,
+                    selector_h - 10.0,
+                    Vec4::new(0.2, 0.4, 0.5, 0.5),
+                );
+            }
+        }
         // 6. Top-Right Tactical Radar / Minimap
         let radar_size = 120.0;
         let radar_x = sw - radar_size - 24.0;

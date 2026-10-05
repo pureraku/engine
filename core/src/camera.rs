@@ -1,6 +1,7 @@
 use glam::{Mat4, Vec3};
 use glfw::{Action, Key, Window};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Camera {
     pub position: Vec3,
     pub fov: f32,
@@ -24,6 +25,10 @@ impl Camera {
         }
     }
 
+    pub fn aspect(&self) -> f32 {
+        self.aspect
+    }
+
     pub fn set_aspect(&mut self, aspect: f32) {
         self.aspect = aspect;
     }
@@ -37,6 +42,14 @@ impl Camera {
             yaw.sin() * pitch.cos(),
         )
         .normalize()
+    }
+
+    pub fn right(&self) -> Vec3 {
+        self.front().cross(Vec3::Y).normalize()
+    }
+
+    pub fn up(&self) -> Vec3 {
+        self.right().cross(self.front()).normalize()
     }
 
     pub fn view_matrix(&self) -> Mat4 {
@@ -134,8 +147,10 @@ pub struct PlayerCamera {
     pub move_speed: f32,
     pub jump_velocity: f32,
     pub gravity: f32,
-    velocity: Vec3,
-    sensitivity: f32,
+    pub ground_y: f32,
+    pub velocity: Vec3,
+    pub sensitivity: f32,
+    pub is_grounded: bool,
     first_mouse: bool,
     last_x: f64,
     last_y: f64,
@@ -148,8 +163,10 @@ impl Default for PlayerCamera {
             move_speed: 8.0,
             jump_velocity: 8.0,
             gravity: 30.0,
+            ground_y: -7.0,
             velocity: Vec3::ZERO,
             sensitivity: 0.1,
+            is_grounded: false,
             first_mouse: true,
             last_x: 0.0,
             last_y: 0.0,
@@ -163,16 +180,18 @@ impl PlayerCamera {
         self.enabled = enabled;
     }
 
+    pub fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+
     pub fn reset_mouse(&mut self) {
         self.first_mouse = true;
     }
 
     pub fn update(&mut self, camera: &mut Camera, window: &Window, dt: f32) {
-        const GROUND_Y: f32 = -7.0;
-
         let front = camera.front();
-        let forward = Vec3::new(front.x, 0.0, front.z).normalize();
-        let right = forward.cross(Vec3::Y).normalize();
+        let forward = Vec3::new(front.x, 0.0, front.z).normalize_or_zero();
+        let right = forward.cross(Vec3::Y).normalize_or_zero();
         let mut movement = Vec3::ZERO;
 
         if window.get_key(Key::W) == Action::Press {
@@ -197,10 +216,11 @@ impl PlayerCamera {
 
         camera.position += movement * self.move_speed * dt;
 
-        let grounded = camera.position.y <= GROUND_Y;
+        let grounded = camera.position.y <= self.ground_y;
+        self.is_grounded = grounded;
 
         if grounded {
-            camera.position.y = GROUND_Y;
+            camera.position.y = self.ground_y;
 
             self.velocity.y = 0.0;
 

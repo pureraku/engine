@@ -60,6 +60,9 @@ impl Renderer {
         let proj = camera.projection_matrix();
 
         for obj in scene.objects() {
+            if !obj.visible {
+                continue;
+            }
             let mat = obj.material();
             self.draw_object(obj.model_matrix(), mat, view, proj, camera, lighting, time);
             obj.mesh().draw();

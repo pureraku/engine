@@ -16,13 +16,20 @@ impl Default for Transform {
         }
     }
 }
-
 impl Transform {
+    pub fn from_translation(position: Vec3) -> Self {
+        Self {
+            position,
+            rotation: Vec3::ZERO,
+            scale: Vec3::ONE,
+        }
+    }
+
     pub fn model_matrix(&self) -> Mat4 {
-        Mat4::from_rotation_z(self.rotation.z)
+        Mat4::from_translation(self.position)
             * Mat4::from_rotation_y(self.rotation.y)
             * Mat4::from_rotation_x(self.rotation.x)
-            * Mat4::from_translation(self.position)
+            * Mat4::from_rotation_z(self.rotation.z)
             * Mat4::from_scale(self.scale)
     }
 }

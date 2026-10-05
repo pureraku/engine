@@ -15,7 +15,7 @@ impl Default for App {
 
 impl Game for App {
     fn init(&mut self, engine: &mut Engine) {
-        engine.lighting().light_intensity = 4.0;
+        engine.lighting().light_intensity = 1.0;
 
         self.plane = Some(Plane::new(engine));
         if let Some(plane) = &self.plane {
@@ -29,7 +29,7 @@ impl Game for App {
 
         if let Some(plane) = &self.plane {
             let transform = engine.transform_mut(plane.id);
-            transform.rotation.y += 0.01;
+            transform.rotation.y +=  0.1;
         }
     }
 }

@@ -46,6 +46,10 @@ impl DesktopPlatform {
     pub fn should_close(&self) -> bool {
         self.window.should_close()
     }
+
+    pub fn set_cursor_mode(&mut self, mode: glfw::CursorMode) {
+        self.window.set_cursor_mode(mode);
+    }
 }
 
 impl DesktopPlatform {
@@ -56,21 +60,24 @@ impl DesktopPlatform {
 
         while !self.should_close() {
             let time = self.glfw.get_time() as f32;
-            let dt = time - last;
+            let dt = (time - last).clamp(0.0001, 0.1);
             last = time;
+
+            self.poll();
 
             engine.begin_frame();
 
-            engine.poll_framebuffer_events(self);
+            engine.process_events(self);
 
             engine.update_camera_controls(self, dt);
             game.update(engine, time, dt);
 
             engine.render(time);
+            engine.flush_ui();
 
             self.swap_buffers();
 
-            self.poll();
+            engine.input_mut().end_frame();
         }
     }
 }

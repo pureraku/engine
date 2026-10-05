@@ -1,8 +1,8 @@
 [workspace]
 members = [
     "core",
-    "game",
-    "shader_playground",
+    "game", 
+    "shader_playground", 
 ]
 
 resolver = "2"

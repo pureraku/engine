@@ -23,6 +23,10 @@ impl Material {
         }
     }
 
+    pub fn set_shader(&mut self, shader: Rc<Shader>){
+        self.shader = shader;
+    }
+
     pub fn with_texture(mut self, texture: Rc<Texture>) -> Self {
         self.albedo = Some(texture);
         self
